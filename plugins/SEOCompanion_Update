@@ -1,0 +1,83 @@
+<?php 
+
+$PluginInfo['SEOCompanion_Update'] = array(
+
+   'Description' => 'SEOCompanion_Update is based on Alexandre Plennevaux SEOCompanion 0.2.1. It is your Vanilla Search Engine Optimisation\'s best friend. I modified Alexandres original code to add a more detailed set of SEO tags. It uses the default (look in the plugin default.php to hardcode them.)',
+   
+   
+   'Version' => '0.0.1',   
+   'RequiredPlugins' => FALSE, // This is an array of plugin names/versions that this plugin requires
+   'HasLocale' => FALSE, // Does this plugin have any locale definitions?
+   'RegisterPermissions' => FALSE, // Permissions that should be added for this plugin.
+   'SettingsUrl' => FALSE, // Url of the plugin's settings page.
+   'SettingsPermission' => FALSE, // The permission required to view the SettingsUrl.
+   'Author' => "South Coast Software",
+   'AuthorEmail' => 'joseph.atie@southcoastsoftware.com.au',
+   'AuthorUrl' => 'http://southcoastsoftware.com.au'
+);
+
+class SEOCompanion extends Gdn_Plugin{
+
+     //
+  public function Base_Render_Before(&$Sender)
+  {
+
+  		//  CONFIGURATION - START
+  		
+  		$MetaDescriptionlimit = 20; // max. amount of words in the meta description. Should not be more than 50.
+  		$DefaultDescription= ""; // Default Meta Description
+  		$DefaultTags = ""; // Default list of tags. Don't forget your commas
+  		$Author = "";
+		$Copy = "";
+		$Email = "";
+		$Lang = "";
+		$Char = '';
+		$Rating = "";
+		$Dist = "";
+		$Robots = "";
+		$Revisit = "";
+		$Expires = "";
+		
+  		// CONFIGURATION - END
+  		
+  		$Description = $Sender->Discussion->Body;
+  		if(strlen($Description)<1){
+				$Description = $DefaultDescription;
+  		}
+ 		$Description = explode(' ', strip_tags($Description));
+ 		$Description = array_slice($Description,0,$MetaDescriptionlimit);
+ 		$Description = implode(' ',$Description);
+ 		$Sender->Head->AddTag('meta', array('name' => 'description', 'content'=>$Description));
+  		
+  		$Keywords = $Sender->Discussion->Tags;
+  		if (count($Keywords)<1){
+  			$Keywords = $DefaultTags;
+  		}
+		//keywords
+  		$Keywords = explode(' ',$Keywords);
+  		$Keywords = implode(' ',$Keywords);
+  		$Sender->Head->AddTag('meta', array('name' => 'keywords', 'content'=>$Keywords));
+		//copyright
+		$Sender->Head->AddTag('meta', array('name' => 'copyright', 'content'=>$Copy));
+  		//email
+		$Sender->Head->AddTag('meta', array('name' => 'email', 'content'=>$Email));
+		//language
+  		$Sender->Head->AddTag('meta', array('http-equiv' => 'Content-Language', 'content'=>$Lang));
+		//charset
+		$Sender->Head->AddTag('meta', array('name' => 'Charset', 'content'=>$Char));
+		//rating
+  		$Sender->Head->AddTag('meta', array('name' => 'Rating', 'content'=>$Rating));
+		//distribution
+  		$Sender->Head->AddTag('meta', array('name' => 'Distribution', 'content'=>$Dist));
+		//robots
+		$Sender->Head->AddTag('meta', array('name' => 'Robots', 'content'=>$Robots));
+		//revisit
+  		$Sender->Head->AddTag('meta', array('name' => 'Revisit-after', 'content'=>$Revisit));
+		//expires
+  		$Sender->Head->AddTag('meta', array('name' => 'expires', 'content'=>$Expires));
+  }
+  
+  public function Setup()
+  {
+  }
+}
